@@ -4,8 +4,8 @@
 @import url('./plugin/jquery-ui.min.css');
 html, body{height: 100%;}
 *{box-sizing: border-box;}
-.teethEl{width: 50px; height: 50px; display: inline-block; border: 1px solid #000;}
-.teethEl.cavity{background: red;}
+.teethEl{width: 50px; height: 50px; display: inline-block; border: 1px solid #000; position: relative;}
+.teethEl.cavity:after{content: ''; width: 20px; height: 20px; position: absolute; left: 15px; top: 15px; background: red;}
 .teethEl.active{background: blue !important;}
 
 

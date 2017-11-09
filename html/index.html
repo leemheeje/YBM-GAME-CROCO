@@ -67,14 +67,19 @@
 		this.obj = $.extend(true, {
 			teethWrap: '.teethWrap',
 			teethEl: '.teethEl',
-			teethLength: 6,
-			anesth: 2,
+			teethLength: 12,
+			anesth: 300000,
 			cursor: null,
-			level: 2,
+			level: 10,
+			maxGamePoint: 25,
 		}, obj);
 		this.cavityClsName = '.cavity';
 		this.count = 0;
+		this.loopCount = this.obj.teethLength;
 		this.successCount = [];
+		this.bool = null;
+		this.gamePiont = 0;
+		this.gameFinish = false;
 		this.loop = function() {};
 		this.init();
 	};
@@ -90,12 +95,14 @@
 			return {
 				teethAppend: function() {
 					var html = '';
+					var cls = '';
 					for (var i = 0; i < _this.obj.teethLength; i++) {
 						if (i == 0) {
-							html += '<div class="' + _this.clsFormat(_this.obj.teethEl) + ' cavity" data-count="' + i + '"></div>';
+							cls = _this.clsFormat(_this.obj.teethEl) + ' ' + _this.clsFormat(_this.cavityClsName);
 						} else {
-							html += '<div class="' + _this.clsFormat(_this.obj.teethEl) + '" data-count="' + i + '"></div>';
+							cls = _this.clsFormat(_this.obj.teethEl);
 						}
+						html += '<div class="' + cls + '" data-count="' + i + '"></div>';
 					}
 					$(_this.obj.teethWrap).append(html);
 				},
@@ -107,50 +114,39 @@
 		loopFun: function() {
 			var _this = this;
 			var cnt = 1;
-			_this.loop = setInterval(function() {
-				if (_this.count >= (_this.obj.teethLength - 1) || _this.count < 0) {
+			this.loop = setInterval(function() {
+				if (_this.count >= (_this.loopCount - 1) || _this.count < 0) {
 					cnt = cnt * -1;
 				} else if (_this.count == 0) {
 					cnt = 1;
 				}
 				_this.count += cnt;
-				/*for (var i = 0; i < _this.successCount.length; i++) {
-					if (_this.count == _this.successCount[i]) {
-						if (cnt < 0) {
-							_this.count--;
-						} else {
-							if (_this.successCount[i] == (_this.obj.teethLength - 1)) {
-							} else {
-								_this.count++;
-							}
-						}
-					}
-				}*/
-				console.log(_this.count)
 				$(_this.obj.teethEl).removeClass(_this.clsFormat(_this.cavityClsName));
 				$(_this.obj.teethEl + '[data-count=' + _this.count + ']').addClass(_this.clsFormat(_this.cavityClsName));
-				//}, 2000 / this.obj.level);
-			}, 2000 / 3);
+			}, 2000 / this.obj.level);
 		},
 		bind: function() {
 			var _this = this;
 			$(_this.obj.teethEl).off().on({
-				'click touchstart': function() {
-					event.preventDefault();
-					if ($(this).is(_this.cavityClsName)) {
-						_this.act($(this), true);
-					} else {
-						_this.act($(this), false);
-					}
+				'click': function() {
+					//event.preventDefault();
 					clearInterval(_this.loop);
+					if ($(this).is(_this.cavityClsName)) {
+						$(this).addClass('active');
+						_this.act($(this));
+						_this.bool = true;
+					} else {
+						_this.act($(this));
+						_this.bool = false;
+					}
 				},
 			});
 		},
-		act: function($this, bool) {
+		act: function($this) {
+			var _this = this;
 			var $data = $this.data('count');
-			if (bool) {
+			if (_this.bool) {
 				this.successCount.push($data);
-				$this.addClass('active');
 				var cnt = 0;
 				$(this.obj.teethEl).each(function() {
 					if (!$(this).is('.active')) {
@@ -160,14 +156,39 @@
 						$(this).removeAttr('data-count');
 					}
 				});
-				console.log(this.successCount)
+				if ($data == 0) {
+					this.count = 0;
+				} else {
+					this.count--;
+				}
+				if (this.successCount.length == this.obj.teethLength) {
+					this.gameFinishFun(this.bool);
+				}
+				this.loopCount--;
 			} else {
-				console.log('실패')
+				this.obj.anesth--;
+				if (!this.obj.anesth) {
+					this.gameFinishFun(this.bool);
+				}
 			}
-			var _this = this;
-			setTimeout(function() {
-				_this.loopFun();
-			}, 500);
+			if (!this.gameFinish) {
+				console.log(111)
+				setTimeout(function() {
+					//_this.loopFun();
+				}, 1000);
+			}
+		},
+		gameFinishFun: function(bool) {
+			if (bool) {
+				alert('성공');
+			} else {
+				alert('실패');
+			}
+			this.gameFinish = true;
+			this.gamePiontFun();
+		},
+		gamePiontFun: function() {
+			this.gamePoint = Math.round((this.successCount.length / this.obj.teethLength) * this.obj.maxGamePoint);
 		},
 		clsFormat: function(cls) {
 			return cls.replace('.', '');
