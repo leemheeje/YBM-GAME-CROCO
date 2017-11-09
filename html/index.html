@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=1280">
+	<title>Crocodile</title>
+	<script type="text/javascript">
+	if (location.href.indexOf(':8000') != -1) document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')
+	</script>
+	<script src="./js/plugin/jquery-1.9.1.min.js"></script>
+	<script src="./js/plugin/jquery-ui-1.12.1.min.js"></script>
+	<script src="./js/plugin/jquery.ui.touch-punch.min.js"></script>
+	<script src="./js/plugin/jquery.easing.1.3.js"></script>
+	<script src="./js/plugin/jquery.transform.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/style.css">
+</head>
+
+<body>
+	<div class="blgm_wrap">
+		<div class="blgm_in animated">
+			<div class="tnd_wrap teethWrap"></div>
+		</div>
+		<!-- 게임 공통 : S -->
+		<div id="ybm_game_2_ready" class="game_ready">
+			<div>
+				<span>How To Play</span>
+				<div class="guide" title="게임방법">
+					<p>구멍난 터널을 고치러 가는도중 다리가 끊어졌습니다.</p>
+					<p>크레인을 좌우로 움직여 바위를 떨어트려 쌓아 다리 기둥을 만드세요. </p>
+					<p>
+						<span class="c_red bold">안전선(Safety line)</span>까지 돌기둥을 쌓으면 자동으로 다리가 연결 됩니다.</p>
+					<p>바위를 떨어트려 쌓지 못해 물이
+						<span class="c_red bold">제한선(20미터)</span>까지 차오르면 다리가
+						<br/>무너지고 게임이 종료됩니다.</p>
+				</div>
+				<ul class='item' title="게임아이템">
+					<li>+5점
+						<span class="c_red bold">실패시 0.5미터 수면상승</span>
+					</li>
+					<li>+10점
+						<span class="c_red bold">실패시 1미터 수면상승</span>
+					</li>
+					<li>+15점
+						<span class="c_red bold">실패시 1.5미터 수면상승</span>
+					</li>
+					<li>+20점
+						<span class="c_red bold">실패시 2미터 수면상승</span>
+					</li>
+				</ul>
+				<button type="button" id="sound_set" class="on">소리 켬</button>
+				<button type="button" id="start_game_2" class="start_game">시작</button>
+			</div>
+		</div>
+		<div id="game_2_next" class="game_over">
+			<div>
+				<p><em id="game_2_point">100</em><em>포인트</em>가 적립되었습니다.</em>
+				</p>
+				<button id="game_2_over">다음</button>
+			</div>
+		</div>
+		<!-- 게임 공통 : E -->
+	</div>
+	<script type="text/javascript">
+	//var gamePath = Game.gamePath[Game.gameCode]; //폴더경로 변경값
+	var Crocodile = function(obj) {
+		this.obj = $.extend(true, {
+			teethWrap: '.teethWrap',
+			teethEl: '.teethEl',
+			teethLength: 6,
+			anesth: 2,
+			cursor: null,
+			level: 2,
+		}, obj);
+		this.cavityClsName = '.cavity';
+		this.count = 0;
+		this.successCount = [];
+		this.loop = function() {};
+		this.init();
+	};
+	Crocodile.prototype = {
+		init: function() {
+			this.set().teethAppend();
+			this.set().cursor();
+			this.loopFun();
+			this.bind();
+		},
+		set: function() {
+			var _this = this;
+			return {
+				teethAppend: function() {
+					var html = '';
+					for (var i = 0; i < _this.obj.teethLength; i++) {
+						if (i == 0) {
+							html += '<div class="' + _this.clsFormat(_this.obj.teethEl) + ' cavity" data-count="' + i + '"></div>';
+						} else {
+							html += '<div class="' + _this.clsFormat(_this.obj.teethEl) + '" data-count="' + i + '"></div>';
+						}
+					}
+					$(_this.obj.teethWrap).append(html);
+				},
+				cursor: function() {
+
+				},
+			};
+		},
+		loopFun: function() {
+			var _this = this;
+			var cnt = 1;
+			_this.loop = setInterval(function() {
+				if (_this.count >= (_this.obj.teethLength - 1) || _this.count < 0) {
+					cnt = cnt * -1;
+				} else if (_this.count == 0) {
+					cnt = 1;
+				}
+				_this.count += cnt;
+				/*for (var i = 0; i < _this.successCount.length; i++) {
+					if (_this.count == _this.successCount[i]) {
+						if (cnt < 0) {
+							_this.count--;
+						} else {
+							if (_this.successCount[i] == (_this.obj.teethLength - 1)) {
+							} else {
+								_this.count++;
+							}
+						}
+					}
+				}*/
+				console.log(_this.count)
+				$(_this.obj.teethEl).removeClass(_this.clsFormat(_this.cavityClsName));
+				$(_this.obj.teethEl + '[data-count=' + _this.count + ']').addClass(_this.clsFormat(_this.cavityClsName));
+				//}, 2000 / this.obj.level);
+			}, 2000 / 3);
+		},
+		bind: function() {
+			var _this = this;
+			$(_this.obj.teethEl).off().on({
+				'click touchstart': function() {
+					event.preventDefault();
+					if ($(this).is(_this.cavityClsName)) {
+						_this.act($(this), true);
+					} else {
+						_this.act($(this), false);
+					}
+					clearInterval(_this.loop);
+				},
+			});
+		},
+		act: function($this, bool) {
+			var $data = $this.data('count');
+			if (bool) {
+				this.successCount.push($data);
+				$this.addClass('active');
+				var cnt = 0;
+				$(this.obj.teethEl).each(function() {
+					if (!$(this).is('.active')) {
+						$(this).attr('data-count', cnt);
+						cnt++;
+					} else {
+						$(this).removeAttr('data-count');
+					}
+				});
+				console.log(this.successCount)
+			} else {
+				console.log('실패')
+			}
+			var _this = this;
+			setTimeout(function() {
+				_this.loopFun();
+			}, 500);
+		},
+		clsFormat: function(cls) {
+			return cls.replace('.', '');
+		},
+	};
+
+
+	var Game = {};
+	var crocodile = null;
+	$('#start_game_2').off().on('click', function() {
+		$('#ybm_game_2_ready').hide();
+		crocodile = new Crocodile({});
+	}).click();
+	//끝났을때
+	//cny 마지막 Next버튼 클릭시 LMS에 값 저장하기
+	$('#game_2_over').off().click(function() {
+		Game.saved = callback(Game.gameCode, Game.schedIndex, Game.seqNo, Game.point);
+		if (Game.saved) {
+			Game.ending();
+		} else {
+			if (confirm("통신상태가 원할하지 못해 게임점수가 저장되지 않았습니다.\n그래도 진행하시겠습니까?")) Game.ending();
+		}
+	});
+	</script>
+</body>
+
+</html>

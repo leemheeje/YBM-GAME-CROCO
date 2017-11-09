@@ -1,0 +1,178 @@
+@charset 'utf-8';
+@import url('./base.css');
+@import url('./animate.css');
+@import url('./plugin/jquery-ui.min.css');
+html, body{height: 100%;}
+*{box-sizing: border-box;}
+.teethEl{width: 50px; height: 50px; display: inline-block; border: 1px solid #000;}
+.teethEl.cavity{background: red;}
+.teethEl.active{background: blue !important;}
+
+
+/**/
+.c_red{color: #ed1e79 !important;}
+.bold{font-weight: bold !important;}
+.start_game{
+	width:183px;
+	height:116px;
+	background:url(../images/button_start.png) no-repeat;
+	background-position :0 -124px ;
+	border:0;
+	font-size:0;
+	position:absolute;
+	top:394px;
+	left:700px;
+	cursor:pointer;
+}
+.start_game:hover{
+	background-position :0 0px ;
+}
+#ybm_game_2_ready {
+	position:absolute;
+	width:1250px;
+	height:656px;
+	background:rgba(0,0,0,0.8);
+	top:50px;
+	left:15px;
+	z-index:50
+}
+#ybm_game_2_ready>div{
+	position:relative;
+	width:951px;
+	height:572px;
+	background:url(../images/bg_howto.png) no-repeat;
+	margin:78px auto 0;
+	box-sizing : border-box;
+	padding-top:149px;
+	padding-left:11px;
+	padding-right:40px;
+}
+#ybm_game_2_ready>div>span{
+	font-size : 0;
+}
+#ybm_game_2_ready .guide{	
+	padding:30px 0 10px;
+}
+#ybm_game_2_ready .guide p{
+	box-sizing:border-box;
+	padding-left:66px;
+	position:relative;
+	color:#666666;
+	font-weight:bold;
+	font-size:18px;
+	line-height:1.8
+}
+#ybm_game_2_ready .guide p span {
+	font-weight:normal;
+}
+#ybm_game_2_ready .guide p:before{
+	display:block;
+	content:"";
+	width:5px;
+	height:5px;
+	background:#666;
+	border-radius : 50%;
+	position:absolute;
+	left:50px;
+	top:13px;
+}
+#ybm_game_2_ready .item {
+	
+	box-sizing:border-box;
+	margin-left:48px;
+	width:620px;	
+	font-size:0;
+}
+#ybm_game_2_ready .item li {
+	display : inline-block;
+	width:50%;
+	height:64px;
+	font-weight:bold;
+	color:#000;
+	vertical-align : middle;
+	background:url() no-repeat left center;
+	box-sizing:border-box;
+	padding-left:114px;
+	padding-top:14px;
+	padding-bottom:14px;
+	font-size:24px;
+	font-weight: 800;
+	margin-bottom:16px;
+	
+}
+#ybm_game_2_ready .item{
+	
+}
+#ybm_game_2_ready .item li span{
+	display : block;
+	font-weight:normal;
+	font-size:15px;
+	color:#666;
+	margin-top:4px;
+}
+#ybm_game_2_ready .item li:nth-child(1){
+	background-image: url(../images/howbox01.png);
+}
+#ybm_game_2_ready .item li:nth-child(2){
+	background-image: url(../images/howbox02.png);
+}
+#ybm_game_2_ready .item li:nth-child(3){
+	background-image: url(../images/howbox03.png);
+}
+#ybm_game_2_ready .item li:nth-child(4){
+	background-image: url(../images/howbox04.png);
+}
+.game_over{	
+	position:absolute;
+	width:1250px;
+	height:656px;
+	top:50px;
+	left:15px;
+	background:rgba(0,0,0,0.5);
+	z-index:100;
+	display : none;
+}
+
+#game_2_next >div {
+	width:950px;
+	height:589px;
+	background:url(../images/bg_next.png) no-repeat;
+	box-sizing:border-box;
+	margin:78px 0 0 150px;
+	padding:164px 0 0 0px;
+	position:relative;
+	text-align : center;
+
+}
+#game_2_next >div p {	
+	margin:80px 0 0 0;
+	font-size:24px;
+	color:#5e5e5e;
+	display : inline-block;
+	padding-left:90px;
+	background:url(../images/img_coin.png) no-repeat;
+	height:83px;
+	line-height:1
+}
+#game_2_next >div p em {
+	color:#000;
+	font-style:normal;
+	font-size:32px;
+	vertical-align:-2px;
+	line-height:2;
+	font-weight:bold;
+	
+}
+#game_2_next #game_2_over {
+	width:183px;
+	height:116px;
+	background:url(../images/button_next.png) no-repeat;
+	background-position:0 -120px;
+	border:0;
+	font-size:0;
+	position:absolute;
+	top:400px;
+}
+#game_2_next #game_2_over:hover{
+	background-position:0 0px;
+}
