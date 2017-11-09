@@ -4,10 +4,16 @@
 @import url('./plugin/jquery-ui.min.css');
 html, body{height: 100%;}
 *{box-sizing: border-box;}
-.teethEl{width: 50px; height: 50px; display: inline-block; border: 1px solid #000; position: relative;}
-.teethEl.cavity:after{content: ''; width: 20px; height: 20px; position: absolute; left: 15px; top: 15px; background: red;}
-.teethEl.active{background: blue !important;}
-
+/*.tnd_wrap{margin-top: 15px;}
+.teethEl{width: 50px; height: 50px; display: inline-block; border: 1px solid #000; position: relative; transition: all 2.5s; vertical-align: top;}
+.teethEl.cavity.center{height: 80px; transition: all .5s;  background: #ddd;}
+.teethEl.cavity:after{content: none; width: 20px; height: 20px; position: absolute; left: 15px; top: 15px; background: red;}
+.teethEl.active{background: blue !important; height: 1px;}*/
+.tnd_wrap{margin-top: 15px;}
+.teethEl{width: 50px; height: 50px; display: inline-block; border: 1px solid #000; position: relative; vertical-align: top; background: #ddd;}
+.teethEl.cavity{background: gray;}
+.teethEl.cavity:after{content: none; width: 20px; height: 20px; position: absolute; left: 15px; top: 15px; background: red;}
+.teethEl.active{background: #fff !important; }
 
 /**/
 .c_red{color: #ed1e79 !important;}
