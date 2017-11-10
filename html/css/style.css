@@ -9,12 +9,38 @@ html, body{height: 100%;}
 .teethEl.cavity.center{height: 80px; transition: all .5s;  background: #ddd;}
 .teethEl.cavity:after{content: none; width: 20px; height: 20px; position: absolute; left: 15px; top: 15px; background: red;}
 .teethEl.active{background: blue !important; height: 1px;}*/
-.tnd_wrap{margin-top: 15px;}
-.teethEl{width: 50px; height: 50px; display: inline-block; border: 1px solid #000; position: relative; vertical-align: top; background: #ddd;}
-.teethEl.cavity{background: gray;}
+.blgm_wrap{max-width: 1280px; padding: 67px 15px 15px 11px; margin: 0 auto; height: 720px; background: #5e5e5e; position: relative;}
+.blgm_in{height: 100%;  background: url(../images/tnbg_02.png) no-repeat left top; position: relative;  overflow: hidden;}
+.tnd_area{ cursor: none; position: absolute; width: 594px; height: 422px; bottom: 0px; left: 50%; margin-left: -297px;}
+.tnd_area *{cursor: none;}
+.img_cursor{width: 283px; height: 448px; position: fixed; background: url(../images/cursor.png); left: -9999999em; pointer-events: none;}
+// .img_cursor{height: 50px; width: 50px; background: red; position: absolute; }
+.mob  .img_cursor{display: none;}
+.tnd_wrap{position: absolute; left: 50px; bottom: 50px; width: 494px; height: 322px;}
+.teethEl{width: 47px; height: 60px; display: inline-block; position: relative;background: url(../images/teeth.png) no-repeat left top;}
+.teethEl.cavity{background-image: url(../images/teeth_cav.png);}
+.teethEl.cavity:focus{background-image: url(../images/teeth_cav.png);}
 .teethEl.cavity:after{content: none; width: 20px; height: 20px; position: absolute; left: 15px; top: 15px; background: red;}
-.teethEl.active{background: #fff !important; }
-
+.teethEl.active{background-image: url(../images/teeth_cav_active.png);}
+.teethEl.tp0{position: absolute; left: 14px; top: 9px;}
+.teethEl.tp1{position: absolute; left: 49px; top: 62px;}
+.teethEl.tp2{position: absolute; left: 66px; top: 119px;}
+.teethEl.tp3{position: absolute; left: 91px; top: 177px;}
+.teethEl.tp4{position: absolute; left: 133px; top: 225px;}
+.teethEl.tp5{position: absolute; left: 190px; bottom: 10px;}
+.teethEl.tp6{position: absolute; right: 190px; bottom: 10px;}
+.teethEl.tp7{position: absolute; right: 130px; top: 225px;}
+.teethEl.tp8{position: absolute; right: 86px; top: 177px;}
+.teethEl.tp9{position: absolute; right: 63px; top: 119px;}
+.teethEl.tp10{position: absolute; right: 49px; top: 62px;}
+.teethEl.tp11{position: absolute; right: 14px; top: 9px;}
+.score_warp{width: 234px; height: 114px; background: url(../images/score.png) no-repeat left top; position: absolute; left: 30px; top: 27px; overflow: hidden; padding: 0 10px 0 6px;}
+.score_warp .scr_txt{width: 50%; height: 100%; line-height: 96px; float: left; text-align: center; font-size: 60px; font-weight: 800; letter-spacing: -2px;}
+.score_warp .scr_txt.tp01{color: #405099;}
+.score_warp .scr_txt.tp02{color: #fff;}
+.anesth_wrap{overflow: hidden; position: absolute; right: 30px; top: 15px; }
+.anesth_wrap .img_anesth{width: 105px; height: 147px; float: left; background: url(../images/anesth.png)no-repeat left top;}
+.anesth_wrap .img_anesth.null{background-image: url(../images/anesth_null.png)}
 /**/
 .c_red{color: #ed1e79 !important;}
 .bold{font-weight: bold !important;}
@@ -181,4 +207,21 @@ html, body{height: 100%;}
 }
 #game_2_next #game_2_over:hover{
 	background-position:0 0px;
+}
+#ios_audio_button{
+	width:82px;
+	height:78px;
+	background:url(../images/img_vol.png) no-repeat;
+	background-position:-82px 0px;
+	position:absolute;
+	border:0;
+	top:210px;
+	left:35px;
+	font-size:0;
+	z-index: 10;
+}
+#ios_audio_button:active,
+#ios_audio_button:focus{outline: none;}
+#ios_audio_button.off{
+	background-position:0px 0px;
 }

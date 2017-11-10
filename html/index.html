@@ -19,7 +19,15 @@
 <body>
 	<div class="blgm_wrap">
 		<div class="blgm_in animated">
-			<div class="tnd_wrap teethWrap"></div>
+			<div class="score_warp">
+				<span class="scr_txt tp01 scoreTeethLeng"></span>
+				<span class="scr_txt tp02 scoreTeethTotal"></span>
+			</div>
+			<div class="tnd_area tndArea">
+				<div class="tnd_wrap teethWrap"></div>
+			</div>
+			<div class="img_cursor imgCursor"></div>
+			<div class="anesth_wrap anesthWrap"></div>
 		</div>
 		<!-- 게임 공통 : S -->
 		<div id="ybm_game_2_ready" class="game_ready">
@@ -60,6 +68,7 @@
 			</div>
 		</div>
 		<!-- 게임 공통 : E -->
+		<button id="ios_audio_button" class="">사운드 온오프</button>
 	</div>
 	<script type="text/javascript">
 	//var gamePath = Game.gamePath[Game.gameCode]; //폴더경로 변경값
@@ -67,11 +76,16 @@
 		this.obj = $.extend(true, {
 			teethWrap: '.teethWrap',
 			teethEl: '.teethEl',
-			teethLength: 30,
+			teethLength: 12,
 			anesth: 3,
 			cursor: null,
-			level: 5,
+			level: 2,
 			maxGamePoint: 25,
+			scoreTeethTotal: '.scoreTeethTotal',
+			scoreTeethLeng: '.scoreTeethLeng',
+			anesthWrap: '.anesthWrap',
+			anesthImg: '.anesthImg',
+			imgCursor: '.imgCursor',
 		}, obj);
 		this.cavityClsName = '.cavity';
 		this.count = 0;
@@ -80,18 +94,70 @@
 		this.bool = null;
 		this.gamePiont = 0;
 		this.gameFinish = false;
+		this.sound = {
+			bool: true,
+			el: '.soundPlayLst',
+			onoff: '#ios_audio_button',
+			lst: ['.sndLst.tp01', '.sndLst.tp02', '.sndLst.tp03', '.sndLst.tp04'],
+		};
+		this.mouse = { x: 0, y: 0 };
 		this.loop = function() {};
+		this.user();
 		this.init();
 	};
 	Crocodile.prototype = {
 		init: function() {
 			this.set().teethAppend();
 			this.set().cursor();
+			this.setSound();
 			this.loopFun();
 			this.bind();
 		},
+		user: function() {
+			var user = navigator.userAgent;
+			var userArray = [
+				['mob', user.indexOf('Mobile') != -1],
+				['android', user.indexOf('Android') != -1],
+				['iphone', user.indexOf('iPhone') != -1]
+			];
+			for (var i = 0; i < userArray.length; i++) {
+				if (userArray[i][1]) {
+					$('html').addClass(userArray[i][0]);
+					this.mobile = true;
+				}
+			}
+		},
+		setSound: function() {
+			var _this = this;
+			var button = '';
+			$(this.sound.onoff).off().on('click', function() {
+				$(this).toggleClass('off');
+				if ($(this).is('.off')) {
+					_this.sound.bool = false;
+				} else {
+					_this.sound.bool = true;
+				}
+			});
+			for (var i = 0; i < this.sound.lst.length; i++) {
+				$(this.sound.lst[i]).attr('data-sudfile', i);
+				button += '<button data-sudbutton="' + i + '" class="hidden" type="button">오디오버튼</button>';
+			}
+			$(this.sound.el).append(button);
+		},
+		getSound: function(el) {
+			if (this.sound.bool) {
+				var $el = $(el);
+				var $data = $el.data('sudfile');
+				$el[0].muted = false;
+				$('[data-sudbutton="' + $data + '"]').off().on('click', function() {
+					$('[data-sudfile="' + $data + '"]')[0].play();
+				}).click();
+			}
+		},
 		set: function() {
 			var _this = this;
+			this.scoreAnesthFun().score();
+			this.scoreAnesthFun().anesth();
 			return {
 				teethAppend: function() {
 					var html = '';
@@ -102,12 +168,22 @@
 						} else {
 							cls = _this.clsFormat(_this.obj.teethEl);
 						}
-						html += '<div class="' + cls + ' tp' + i + '" data-count="' + i + '"></div>';
+						html += '<a href="javascript: ;" class="' + cls + ' tp' + i + '" data-count="' + i + '"></a>';
 					}
 					$(_this.obj.teethWrap).append(html);
 				},
 				cursor: function() {
-
+					//this.obj.imgCurso
+					$('.tndArea').on({
+						'mousemove': function() {
+							_this.mouse.x = event.pageX + 75;
+							_this.mouse.y = event.pageY;
+							$(_this.obj.imgCursor).css({
+								'left': _this.mouse.x - $('.tndArea')[0].offsetLeft,
+								'top': _this.mouse.y - $('.tndArea')[0].offsetTop + 207,
+							});
+						}
+					})
 				},
 			};
 		},
@@ -132,11 +208,11 @@
 					event.preventDefault();
 					if ($(this).is(_this.cavityClsName)) {
 						$(this).addClass('active');
-						_this.act($(this));
 						_this.bool = true;
-					} else {
 						_this.act($(this));
+					} else {
 						_this.bool = false;
+						_this.act($(this));
 					}
 				},
 			});
@@ -164,18 +240,40 @@
 					this.gameFinishFun(this.bool);
 				}
 				this.loopCount--;
+				this.scoreAnesthFun().score();
 			} else {
 				clearInterval(this.loop);
 				this.obj.anesth--;
+				$(this.obj.anesthImg + '[data-anesth="' + this.obj.anesth + '"]').addClass('null');
 				if (!this.obj.anesth) {
 					this.gameFinishFun(this.bool);
 					return;
 				}
 				if (!this.gameFinish) {
-					//alert('깨물림');
 					_this.loopFun();
 				}
 			}
+
+		},
+		scoreAnesthFun: function() {
+			var _this = this;
+			return {
+				score: function() {
+					$(_this.obj.scoreTeethTotal).text(_this.obj.teethLength);
+					$(_this.obj.scoreTeethLeng).text($(_this.obj.teethEl + '.active').length);
+				},
+				anesth: function() {
+					var $el = $(_this.obj.anesthWrap);
+					var html = '';
+					if (!$el.children().length) {
+						for (var i = 0; i < _this.obj.anesth; i++) {
+							html += '<span class="img_anesth anesthImg" data-anesth="' + i + '"></span>';
+						}
+						$el.html(html);
+					}
+				},
+			};
+
 		},
 		gameFinishFun: function(bool) {
 			if (bool) {
