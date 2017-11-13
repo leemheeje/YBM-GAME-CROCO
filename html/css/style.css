@@ -11,12 +11,15 @@ html, body{height: 100%;}
 .teethEl.active{background: blue !important; height: 1px;}*/
 .blgm_wrap{max-width: 1280px; padding: 67px 15px 15px 11px; margin: 0 auto; height: 720px; background: #5e5e5e; position: relative;}
 .blgm_in{height: 100%;  background: url(../images/tnbg_02.png) no-repeat left top; position: relative;  overflow: hidden;}
-.tnd_area{ cursor: none; position: absolute; width: 594px; height: 422px; bottom: 0px; left: 50%; margin-left: -297px;}
-.tnd_area *{cursor: none;}
-.img_cursor{width: 283px; height: 448px; position: fixed; background: url(../images/cursor.png); left: -9999999em; pointer-events: none;}
+.blgm_in.miss{background-image: url(../images/tnbg_miss.png);}
+.blgm_in:hover .img_cursor{display: block;}
+.tnd_area{ position: absolute; width: 594px; height: 422px; bottom: 0px; left: 50%; margin-left: -297px;}
+//.img_cursor{width: 283px; height: 463px; position: fixed; background: url(../images/cursor.png); left: -9999999em; pointer-events: none; display: none;}
+//.img_cursor.active{background-image: url(../images/cursor_active.png);}
 // .img_cursor{height: 50px; width: 50px; background: red; position: absolute; }
-.mob  .img_cursor{display: none;}
+// .mob  .img_cursor{display: none !important;}
 .tnd_wrap{position: absolute; left: 50px; bottom: 50px; width: 494px; height: 322px;}
+.tnd_wrap.miss{visibility: hidden;}
 .teethEl{width: 47px; height: 60px; display: inline-block; position: relative;background: url(../images/teeth.png) no-repeat left top;}
 .teethEl.cavity{background-image: url(../images/teeth_cav.png);}
 .teethEl.cavity:focus{background-image: url(../images/teeth_cav.png);}
@@ -41,6 +44,26 @@ html, body{height: 100%;}
 .anesth_wrap{overflow: hidden; position: absolute; right: 30px; top: 15px; }
 .anesth_wrap .img_anesth{width: 105px; height: 147px; float: left; background: url(../images/anesth.png)no-repeat left top;}
 .anesth_wrap .img_anesth.null{background-image: url(../images/anesth_null.png)}
+.tnd_eye_area{width: 594px; height: 216px; top: 0; left: 50%; margin-left: -297px; position: absolute;}
+.tnd_eye_area .ey_img{width: 64px; height: 100px; background: url(../images/img_nos.png) no-repeat left top; background-size: 100% auto; position: absolute; left: 394px; top: 95px;}
+.tnd_eye_area .ey_img{
+	-webkit-animation:plu 3.5s linear infinite;
+	-moz-animation:plu 3.5s linear infinite;
+	animation:plu 3.5s linear infinite;
+}
+.tnd_eye_area .ey_img.miss{visibility: hidden;}
+@keyframes plu{
+	0%{width: 64px;}
+	14%{width: 91px;}
+	28%{width: 106px;}
+	40%{width: 124px;}
+	64%{width: 106px;}
+	78%{width: 91px;}
+	100%{width: 64px;}
+}
+.pop_miss{background: rgba(0,0,0,.7); position: absolute; left: 0; top: 0; text-align: center; width: 100%; height: 100%; z-index: 10; display: none;}
+.pop_miss .pop_img{width: 100%; height: 100%; background: no-repeat url(../images/img_miss.png) center center; background-position: center calc(50% + 50px); display: block;}
+.pop_miss.active{display: block;}
 /**/
 .c_red{color: #ed1e79 !important;}
 .bold{font-weight: bold !important;}
@@ -61,19 +84,19 @@ html, body{height: 100%;}
 }
 #ybm_game_2_ready {
 	position:absolute;
-	width:1250px;
-	height:656px;
+	width:1254px;
+	height:638px;
 	background:rgba(0,0,0,0.8);
-	top:50px;
-	left:15px;
+	top:67px;
+	left:11px;
 	z-index:50
 }
 #ybm_game_2_ready>div{
 	position:relative;
 	width:951px;
-	height:572px;
+	height:623px;
 	background:url(../images/bg_howto.png) no-repeat;
-	margin:78px auto 0;
+	margin:5px auto 0;
 	box-sizing : border-box;
 	padding-top:149px;
 	padding-left:11px;
@@ -156,10 +179,10 @@ html, body{height: 100%;}
 }
 .game_over{	
 	position:absolute;
-	width:1250px;
-	height:656px;
-	top:50px;
-	left:15px;
+	width:1254px;
+	height:638px;
+	top:67px;
+	left:11px;
 	background:rgba(0,0,0,0.5);
 	z-index:100;
 	display : none;
@@ -170,7 +193,7 @@ html, body{height: 100%;}
 	height:589px;
 	background:url(../images/bg_next.png) no-repeat;
 	box-sizing:border-box;
-	margin:78px 0 0 150px;
+	margin:30px 0 0 150px;
 	padding:164px 0 0 0px;
 	position:relative;
 	text-align : center;

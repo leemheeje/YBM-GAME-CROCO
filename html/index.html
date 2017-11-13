@@ -23,6 +23,9 @@
 				<span class="scr_txt tp01 scoreTeethLeng"></span>
 				<span class="scr_txt tp02 scoreTeethTotal"></span>
 			</div>
+			<div class="tnd_eye_area">
+				<div class="ey_img eyeImg"> </div>
+			</div>
 			<div class="tnd_area tndArea">
 				<div class="tnd_wrap teethWrap"></div>
 			</div>
@@ -33,30 +36,6 @@
 		<div id="ybm_game_2_ready" class="game_ready">
 			<div>
 				<span>How To Play</span>
-				<div class="guide" title="게임방법">
-					<p>구멍난 터널을 고치러 가는도중 다리가 끊어졌습니다.</p>
-					<p>크레인을 좌우로 움직여 바위를 떨어트려 쌓아 다리 기둥을 만드세요. </p>
-					<p>
-						<span class="c_red bold">안전선(Safety line)</span>까지 돌기둥을 쌓으면 자동으로 다리가 연결 됩니다.</p>
-					<p>바위를 떨어트려 쌓지 못해 물이
-						<span class="c_red bold">제한선(20미터)</span>까지 차오르면 다리가
-						<br/>무너지고 게임이 종료됩니다.</p>
-				</div>
-				<ul class='item' title="게임아이템">
-					<li>+5점
-						<span class="c_red bold">실패시 0.5미터 수면상승</span>
-					</li>
-					<li>+10점
-						<span class="c_red bold">실패시 1미터 수면상승</span>
-					</li>
-					<li>+15점
-						<span class="c_red bold">실패시 1.5미터 수면상승</span>
-					</li>
-					<li>+20점
-						<span class="c_red bold">실패시 2미터 수면상승</span>
-					</li>
-				</ul>
-				<button type="button" id="sound_set" class="on">소리 켬</button>
 				<button type="button" id="start_game_2" class="start_game">시작</button>
 			</div>
 		</div>
@@ -69,6 +48,9 @@
 		</div>
 		<!-- 게임 공통 : E -->
 		<button id="ios_audio_button" class="">사운드 온오프</button>
+		<div class="pop_miss popMiss">
+			<span class="pop_img popMissImg"></span>
+		</div>
 	</div>
 	<script type="text/javascript">
 	//var gamePath = Game.gamePath[Game.gameCode]; //폴더경로 변경값
@@ -79,13 +61,16 @@
 			teethLength: 12,
 			anesth: 3,
 			cursor: null,
-			level: 2,
+			level: 4,
 			maxGamePoint: 25,
 			scoreTeethTotal: '.scoreTeethTotal',
 			scoreTeethLeng: '.scoreTeethLeng',
 			anesthWrap: '.anesthWrap',
 			anesthImg: '.anesthImg',
 			imgCursor: '.imgCursor',
+			eye: '.eyeImg',
+			popMiss: '.popMiss',
+			popMissImg: '.popMissImg'
 		}, obj);
 		this.cavityClsName = '.cavity';
 		this.count = 0;
@@ -97,7 +82,7 @@
 		this.sound = {
 			bool: true,
 			el: '.soundPlayLst',
-			onoff: '#ios_audio_button',
+			onoff: '#ios_audio_buttonm',
 			lst: ['.sndLst.tp01', '.sndLst.tp02', '.sndLst.tp03', '.sndLst.tp04'],
 		};
 		this.mouse = { x: 0, y: 0 };
@@ -108,7 +93,7 @@
 	Crocodile.prototype = {
 		init: function() {
 			this.set().teethAppend();
-			this.set().cursor();
+			//this.set().cursor();
 			this.setSound();
 			this.loopFun();
 			this.bind();
@@ -173,7 +158,6 @@
 					$(_this.obj.teethWrap).append(html);
 				},
 				cursor: function() {
-					//this.obj.imgCurso
 					$('.tndArea').on({
 						'mousemove': function() {
 							_this.mouse.x = event.pageX + 75;
@@ -183,13 +167,24 @@
 								'top': _this.mouse.y - $('.tndArea')[0].offsetTop + 207,
 							});
 						}
-					})
+					});
+					$(document).on({
+						'mousedown': function() {
+							$(_this.obj.imgCursor).addClass('active');
+						},
+						'mouseup': function() {
+							$(_this.obj.imgCursor).removeClass('active');
+						},
+					});
 				},
 			};
 		},
 		loopFun: function() {
 			var _this = this;
-			var cnt = 1;
+			var cnt = !$('.teethEl').not('[data-count=0]').length ? 0 : 1;
+			if (!$(this.obj.eye).is('.active')) {
+				$(this.obj.eye).addClass('active');
+			}
 			_this.loop = setInterval(function() {
 				if (_this.count >= (_this.loopCount - 1) || _this.count < 0) {
 					cnt = cnt * -1;
@@ -248,12 +243,38 @@
 				if (!this.obj.anesth) {
 					this.gameFinishFun(this.bool);
 					return;
-				}
-				if (!this.gameFinish) {
-					_this.loopFun();
+				} else {
+					this.actCallb(true).miss();
 				}
 			}
-
+		},
+		actCallb: function(bool) {
+			var _this = this;
+			return {
+				miss: function() {
+					$(_this.obj.teethWrap).addClass('miss');
+					$(_this.obj.eye).addClass('miss');
+					$('.blgm_in').addClass('miss').animate({
+						'callbFunValud': 0
+					}, {
+						'complete': function() {
+							$(_this.obj.popMiss).addClass('active');
+							$(_this.obj.popMissImg).addClass('animated bounceIn');
+						},
+						'duration': 600
+					});
+					setTimeout(function() {
+						$('.blgm_in').removeClass('miss');
+						$(_this.obj.teethWrap).removeClass('miss');
+						$(_this.obj.eye).removeClass('miss');
+						$(_this.obj.popMiss).removeClass('active');
+						$(_this.obj.popMissImg).removeClass('animated bounceIn');
+						if (!_this.gameFinish) {
+							_this.loopFun();
+						}
+					}, 2000);
+				},
+			};
 		},
 		scoreAnesthFun: function() {
 			var _this = this;
@@ -276,13 +297,10 @@
 
 		},
 		gameFinishFun: function(bool) {
-			if (bool) {
-				alert('성공');
-			} else {
-				alert('실패');
-			}
 			this.gameFinish = true;
 			this.gamePiontFun();
+			$('#game_2_point').text(this.gamePoint);
+			$('#game_2_next').show();
 		},
 		gamePiontFun: function() {
 			this.gamePoint = Math.round((this.successCount.length / this.obj.teethLength) * this.obj.maxGamePoint);
@@ -293,7 +311,9 @@
 	};
 
 
-	var Game = {};
+	var Game = {
+		callback: function() {}
+	};
 	var crocodile = null;
 	$('#start_game_2').off().on('click', function() {
 		$('#ybm_game_2_ready').hide();
