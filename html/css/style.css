@@ -24,6 +24,7 @@ html, body{height: 100%;}
 .teethEl.cavity{background-image: url(../images/teeth_cav.png);}
 .teethEl.cavity:focus{background-image: url(../images/teeth_cav.png);}
 .teethEl.cavity:after{content: none; width: 20px; height: 20px; position: absolute; left: 15px; top: 15px; background: red;}
+.teethEl.cavity.active,
 .teethEl.active{background-image: url(../images/teeth_cav_active.png);}
 .teethEl.tp0{position: absolute; left: 14px; top: 9px;}
 .teethEl.tp1{position: absolute; left: 49px; top: 62px;}
