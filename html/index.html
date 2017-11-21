@@ -107,6 +107,9 @@
 					this.mobile = true;
 				}
 			}
+			if (this.mobile && this.obj.level > 2) {
+				this.obj.level = this.obj.level - 2;
+			}
 		},
 		setSound: function() {
 			var _this = this;
@@ -175,9 +178,8 @@
 				},
 			};
 		},
-		loopFun: function(dir) {
+		loopFun: function() {
 			var _this = this;
-			var dir = dir ? true : false;
 			if (!$(this.obj.eye).is('.active')) {
 				$(this.obj.eye).addClass('active');
 			}
@@ -189,14 +191,13 @@
 				}
 				$(_this.obj.teethEl).removeClass(_this.clsFormat(_this.cavityClsName));
 				$(_this.obj.teethEl + '[data-count=' + _this.count + ']').addClass(_this.clsFormat(_this.cavityClsName));
-				dir = false;
 			}, 2000 / this.obj.level);
 		},
 		bind: function() {
 			var _this = this;
 			var $data = null;
 			$(_this.obj.teethEl).on({
-				'click': function() {
+				'click touchstart': function() {
 					event.preventDefault();
 					$data = $(this).data('count');
 					if (!$(this).is('.active')) {
@@ -213,7 +214,6 @@
 		},
 		act: function($this, $data) {
 			var _this = this;
-			clearInterval(_this.loop);
 			if (_this.bool) {
 				this.successCount.push($data);
 				var cnt = 0;
@@ -235,11 +235,6 @@
 				}
 				this.loopCount--;
 				this.scoreAnesthFun().score();
-				if (_this.loopDirNum < 0) {
-					_this.loopFun(true);
-				} else {
-					_this.loopFun();
-				}
 				if ($('[data-count]').length == 1) {
 					setInterval(function() {
 						$('[data-count]').toggleClass('cavity');
@@ -247,20 +242,10 @@
 					clearInterval(_this.loop);
 				}
 			} else {
+				clearInterval(_this.loop);
 				this.obj.anesth--;
 				$(this.obj.anesthImg + '[data-anesth="' + this.obj.anesth + '"]').addClass('null');
 				if (!this.obj.anesth) {
-					this.gameFinishFun(this.bool);
-					return;
-				} else {
-					this.actCallb(true).miss();
-				}
-			}
-		},
-		actCallb: function(bool) {
-			var _this = this;
-			return {
-				miss: function() {
 					$(_this.obj.teethWrap).addClass('miss');
 					$(_this.obj.eye).addClass('miss');
 					$('.blgm_in').addClass('miss').animate({
@@ -273,6 +258,21 @@
 						'duration': 600
 					});
 					setTimeout(function() {
+						_this.gameFinishFun(_this.bool);
+					}, 600);
+				} else {
+					this.actCallb(true).miss();
+				}
+			}
+		},
+		actCallb: function(bool) {
+			var _this = this;
+			return {
+				miss: function() {
+					$(_this.obj.eye).addClass('miss');
+					$(_this.obj.popMiss).addClass('active');
+					$(_this.obj.popMissImg).addClass('animated bounceIn');
+					setTimeout(function() {
 						$('.blgm_in').removeClass('miss');
 						$(_this.obj.teethWrap).removeClass('miss');
 						$(_this.obj.eye).removeClass('miss');
@@ -282,11 +282,7 @@
 							if (_this.count == -1) {
 								_this.count = 0;
 							}
-							if (_this.loopDirNum < 0) {
-								_this.loopFun(true);
-							} else {
-								_this.loopFun();
-							}
+							_this.loopFun();
 						}
 					}, 2000);
 				},
