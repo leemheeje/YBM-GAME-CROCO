@@ -9,8 +9,8 @@ html, body{height: 100%;}
 .teethEl.cavity.center{height: 80px; transition: all .5s;  background: #ddd;}
 .teethEl.cavity:after{content: none; width: 20px; height: 20px; position: absolute; left: 15px; top: 15px; background: red;}
 .teethEl.active{background: blue !important; height: 1px;}*/
-.blgm_wrap{max-width: 1280px; padding: 67px 15px 15px 11px; margin: 0 auto; height: 720px; background: #5e5e5e; position: relative;}
-.blgm_in{height: 100%;  background: url(../images/tnbg_02.png) no-repeat left top; position: relative;  overflow: hidden;}
+.blgm_wrap{width: 1280px; padding: 66px 12px 12px 12px; margin: 0 auto; height: 720px; background: #65a9e0 url(../images/breaktime.png) no-repeat left 10px; position: relative; }
+.blgm_in{height: 100%;  background: url(../images/tnbg_02.png) no-repeat left top; position: relative;  overflow: hidden; border-radius: 24px; overflow: hidden;}
 .blgm_in.miss{background-image: url(../images/tnbg_miss.png);}
 .blgm_in:hover .img_cursor{display: block;}
 .tnd_area{ position: absolute; width: 594px; height: 422px; bottom: 0px; left: 50%; margin-left: -297px;}
@@ -66,6 +66,7 @@ html, body{height: 100%;}
 .pop_miss .pop_img{width: 100%; height: 100%; background: no-repeat url(../images/img_miss.png) center center; background-position: center calc(50% + 50px); display: block;}
 .pop_miss.active{display: block;}
 /**/
+.hidden{position: absolute; left: -9999em;}
 .c_red{color: #ed1e79 !important;}
 .bold{font-weight: bold !important;}
 .start_game{
@@ -85,12 +86,14 @@ html, body{height: 100%;}
 }
 #ybm_game_2_ready {
 	position:absolute;
-	width:1254px;
-	height:638px;
+	width:1256px;
+	height:642px;
 	background:rgba(0,0,0,0.8);
-	top:67px;
-	left:11px;
-	z-index:50
+	top:66px;
+	left:12px;
+	z-index:50;
+	border-radius: 24px;
+    overflow: hidden;
 }
 #ybm_game_2_ready>div{
 	position:relative;
@@ -248,4 +251,14 @@ html, body{height: 100%;}
 #ios_audio_button:focus{outline: none;}
 #ios_audio_button.off{
 	background-position:0px 0px;
+}
+#point{
+	position: absolute;
+    height: 30px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.9;
+    top: 13px;
+    right: 30px;
 }

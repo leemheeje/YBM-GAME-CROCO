@@ -14,7 +14,8 @@
 </head>
 
 <body>
-	<div class="blgm_wrap">
+	<div class="blgm_wrap" style="background: url(./games/game4_BuildBridge/images/img_breaktime_basic-full.png)">
+		<span id="point">333</span>
 		<div class="blgm_in animated">
 			<div class="score_warp">
 				<span class="scr_txt tp01 scoreTeethLeng"></span>
@@ -26,7 +27,6 @@
 			<div class="tnd_area tndArea">
 				<div class="tnd_wrap teethWrap"></div>
 			</div>
-			<div class="img_cursor imgCursor"></div>
 			<div class="anesth_wrap anesthWrap"></div>
 		</div>
 		<!-- 게임 공통 : S -->
@@ -44,6 +44,12 @@
 			</div>
 		</div>
 		<!-- 게임 공통 : E -->
+		<div class="sound_lst soundPlayLst">
+			<audio src="./sound/chuck.mp3" class="sndLst tp01"></audio>
+			<audio src="./sound/DingDong.mp3" class="sndLst tp02"></audio>
+			<audio src="./sound/result.mp3" class="sndLst tp03"></audio>
+			<audio src="./sound/start.mp3" class="sndLst tp04"></audio>
+		</div>
 		<button id="ios_audio_button" class="">사운드 온오프</button>
 		<div class="pop_miss popMiss">
 			<span class="pop_img popMissImg"></span>
@@ -57,7 +63,6 @@
 			teethEl: '.teethEl',
 			teethLength: 12,
 			anesth: 3,
-			cursor: null,
 			level: 7,
 			maxGamePoint: 25,
 			scoreTeethTotal: '.scoreTeethTotal',
@@ -79,10 +84,10 @@
 		this.sound = {
 			bool: true,
 			el: '.soundPlayLst',
-			onoff: '#ios_audio_buttonm',
+			onoff: '#ios_audio_button',
+			//물엇을때 , 성공햇을때, 포인트
 			lst: ['.sndLst.tp01', '.sndLst.tp02', '.sndLst.tp03', '.sndLst.tp04'],
 		};
-		this.mouse = { x: 0, y: 0 };
 		this.loop = function() {};
 		this.user();
 		this.init();
@@ -93,6 +98,9 @@
 			this.setSound();
 			this.loopFun();
 			this.bind();
+			this.getSound(this.sound.lst[0], true);
+			this.getSound(this.sound.lst[1], true);
+			this.getSound(this.sound.lst[2], true);
 		},
 		user: function() {
 			var user = navigator.userAgent;
@@ -128,11 +136,15 @@
 			}
 			$(this.sound.el).append(button);
 		},
-		getSound: function(el) {
+		getSound: function(el, vol) {
 			if (this.sound.bool) {
 				var $el = $(el);
 				var $data = $el.data('sudfile');
-				$el[0].muted = false;
+				if (vol) {
+					$el[0].muted = true;
+				} else {
+					$el[0].muted = false;
+				}
 				$('[data-sudbutton="' + $data + '"]').off().on('click', function() {
 					$('[data-sudfile="' + $data + '"]')[0].play();
 				}).click();
@@ -155,27 +167,7 @@
 						html += '<a href="javascript: ;" class="' + cls + ' tp' + i + '" data-count="' + i + '"></a>';
 					}
 					$(_this.obj.teethWrap).append(html);
-				},
-				cursor: function() {
-					$('.tndArea').on({
-						'mousemove': function() {
-							_this.mouse.x = event.pageX + 75;
-							_this.mouse.y = event.pageY;
-							$(_this.obj.imgCursor).css({
-								'left': _this.mouse.x - $('.tndArea')[0].offsetLeft,
-								'top': _this.mouse.y - $('.tndArea')[0].offsetTop + 207,
-							});
-						}
-					});
-					$(document).on({
-						'mousedown': function() {
-							$(_this.obj.imgCursor).addClass('active');
-						},
-						'mouseup': function() {
-							$(_this.obj.imgCursor).removeClass('active');
-						},
-					});
-				},
+				}
 			};
 		},
 		loopFun: function() {
@@ -187,7 +179,7 @@
 				if (_this.count >= (_this.loopCount - 1)) {
 					_this.count = 0;
 				} else {
-					_this.count++
+					_this.count++;
 				}
 				$(_this.obj.teethEl).removeClass(_this.clsFormat(_this.cavityClsName));
 				$(_this.obj.teethEl + '[data-count=' + _this.count + ']').addClass(_this.clsFormat(_this.cavityClsName));
@@ -215,6 +207,7 @@
 		act: function($this, $data) {
 			var _this = this;
 			if (_this.bool) {
+				_this.getSound(_this.sound.lst[1]);
 				this.successCount.push($data);
 				var cnt = 0;
 				$(this.obj.teethEl).each(function() {
@@ -260,6 +253,9 @@
 					setTimeout(function() {
 						_this.gameFinishFun(_this.bool);
 					}, 600);
+					if (this.mobile) {
+						this.getSound(this.sound.lst[2]);
+					}
 				} else {
 					this.actCallb(true).miss();
 				}
@@ -272,6 +268,7 @@
 					$(_this.obj.eye).addClass('miss');
 					$(_this.obj.popMiss).addClass('active');
 					$(_this.obj.popMissImg).addClass('animated bounceIn');
+					_this.getSound(_this.sound.lst[0]);
 					setTimeout(function() {
 						$('.blgm_in').removeClass('miss');
 						$(_this.obj.teethWrap).removeClass('miss');
@@ -315,6 +312,7 @@
 			$('#game_2_next').show();
 		},
 		gamePiontFun: function() {
+			this.getSound(this.sound.lst[2]);
 			this.gamePoint = Math.round((this.successCount.length / this.obj.teethLength) * this.obj.maxGamePoint);
 			Game.point = this.gamePoint;
 		},
@@ -324,7 +322,6 @@
 	};
 
 
-
 	var Game = {
 		callback: function() {}
 	};
@@ -332,7 +329,8 @@
 	$('#start_game_2').off().on('click', function() {
 		$('#ybm_game_2_ready').hide();
 		crocodile = new Crocodile();
-	}).click();
+		crocodile.getSound(crocodile.sound.lst[3]);
+	});
 	//끝났을때
 	//cny 마지막 Next버튼 클릭시 LMS에 값 저장하기
 	$('#game_2_over').off().click(function() {
